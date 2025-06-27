@@ -27,15 +27,15 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 /**
  * {@link ViewHolder} implementation for handling {@link Fragment}s. Used in
- * {@link FragmentStateAdapter}.
+ * {@link FragmentListAdapter}.
  */
-public final class FragmentViewHolder extends ViewHolder {
-    private FragmentViewHolder(@NonNull FrameLayout container) {
+public final class FragmentListViewHolder extends ViewHolder {
+    private FragmentListViewHolder(@NonNull FrameLayout container) {
         super(container);
     }
 
     @NonNull
-    static FragmentViewHolder create(@NonNull ViewGroup parent, @RecyclerView.Orientation int orientaiton) {
+    static FragmentListViewHolder create(@NonNull ViewGroup parent, @RecyclerView.Orientation int orientaiton) {
         FrameLayout container = new FrameLayout(parent.getContext());
         if (orientaiton == RecyclerView.VERTICAL) {
             container.setLayoutParams(
@@ -48,7 +48,7 @@ public final class FragmentViewHolder extends ViewHolder {
         }
         container.setId(View.generateViewId());
         container.setSaveEnabled(false);
-        return new FragmentViewHolder(container);
+        return new FragmentListViewHolder(container);
     }
 
     @NonNull

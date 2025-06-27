@@ -6,7 +6,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-internal class FragmentStateScrollListener(
+internal class FragmentListScrollListener(
     private val action: (ignoreState: Boolean) -> Unit
 ) : RecyclerView.OnScrollListener() {
 

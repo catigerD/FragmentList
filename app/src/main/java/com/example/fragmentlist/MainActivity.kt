@@ -6,13 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion
 import androidx.compose.ui.graphics.toArgb
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.fragmentlist.adapter.FragmentStateAdapter
+import com.example.fragmentlist.adapter.FragmentListAdapter
 import com.example.fragmentlist.databinding.ActMainBinding
 import com.example.fragmentlist.databinding.FragMainBinding
 
@@ -42,7 +41,7 @@ class MainActivity : FragmentActivity() {
 
 class MainFragmentAdapter(
     activity: FragmentActivity
-) : FragmentStateAdapter(activity) {
+) : FragmentListAdapter(activity) {
 
     companion object {
         private const val TAG = "MainFragmentAdapter"

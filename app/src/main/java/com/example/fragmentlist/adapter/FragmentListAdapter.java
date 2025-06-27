@@ -53,9 +53,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
-
 /**
  * Similar in behavior to {@link androidx.fragment.app.FragmentStatePagerAdapter
  * FragmentStatePagerAdapter}
@@ -72,8 +69,8 @@ import kotlin.jvm.functions.Function1;
  * {@link Fragment}.
  * </ul>
  */
-public abstract class FragmentStateAdapter extends
-        RecyclerView.Adapter<FragmentViewHolder> implements StatefulAdapter {
+public abstract class FragmentListAdapter extends
+        RecyclerView.Adapter<FragmentListViewHolder> implements StatefulAdapter {
     // State saving config
     private static final String KEY_PREFIX_FRAGMENT = "f#";
     private static final String KEY_PREFIX_STATE = "s#";
@@ -109,20 +106,20 @@ public abstract class FragmentStateAdapter extends
      * @param fragmentActivity if the {@link ViewPager2} lives directly in a
      * {@link FragmentActivity} subclass.
      *
-     * @see FragmentStateAdapter#FragmentStateAdapter(Fragment)
-     * @see FragmentStateAdapter#FragmentStateAdapter(FragmentManager, Lifecycle)
+     * @see FragmentListAdapter#FragmentListAdapter(Fragment)
+     * @see FragmentListAdapter#FragmentListAdapter(FragmentManager, Lifecycle)
      */
-    public FragmentStateAdapter(@NonNull FragmentActivity fragmentActivity) {
+    public FragmentListAdapter(@NonNull FragmentActivity fragmentActivity) {
         this(fragmentActivity.getSupportFragmentManager(), fragmentActivity.getLifecycle());
     }
 
     /**
      * @param fragment if the {@link ViewPager2} lives directly in a {@link Fragment} subclass.
      *
-     * @see FragmentStateAdapter#FragmentStateAdapter(FragmentActivity)
-     * @see FragmentStateAdapter#FragmentStateAdapter(FragmentManager, Lifecycle)
+     * @see FragmentListAdapter#FragmentListAdapter(FragmentActivity)
+     * @see FragmentListAdapter#FragmentListAdapter(FragmentManager, Lifecycle)
      */
-    public FragmentStateAdapter(@NonNull Fragment fragment) {
+    public FragmentListAdapter(@NonNull Fragment fragment) {
         this(fragment.getChildFragmentManager(), fragment.getLifecycle());
     }
 
@@ -130,11 +127,11 @@ public abstract class FragmentStateAdapter extends
      * @param fragmentManager of {@link ViewPager2}'s host
      * @param lifecycle of {@link ViewPager2}'s host
      *
-     * @see FragmentStateAdapter#FragmentStateAdapter(FragmentActivity)
-     * @see FragmentStateAdapter#FragmentStateAdapter(Fragment)
+     * @see FragmentListAdapter#FragmentListAdapter(FragmentActivity)
+     * @see FragmentListAdapter#FragmentListAdapter(Fragment)
      */
-    public FragmentStateAdapter(@NonNull FragmentManager fragmentManager,
-            @NonNull Lifecycle lifecycle) {
+    public FragmentListAdapter(@NonNull FragmentManager fragmentManager,
+                               @NonNull Lifecycle lifecycle) {
         mFragmentManager = fragmentManager;
         mLifecycle = lifecycle;
         super.setHasStableIds(true);
@@ -172,12 +169,12 @@ public abstract class FragmentStateAdapter extends
 
     @NonNull
     @Override
-    public final FragmentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return FragmentViewHolder.create(parent, orientation);
+    public final FragmentListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return FragmentListViewHolder.create(parent, orientation);
     }
 
     @Override
-    public final void onBindViewHolder(final @NonNull FragmentViewHolder holder, int position) {
+    public final void onBindViewHolder(final @NonNull FragmentListViewHolder holder, int position) {
         final long itemId = holder.getItemId();
         final int viewHolderId = holder.getContainer().getId();
         final Long boundItemId = itemForViewHolder(viewHolderId); // item currently bound to the VH
@@ -275,13 +272,13 @@ public abstract class FragmentStateAdapter extends
     }
 
     @Override
-    public final void onViewAttachedToWindow(@NonNull final FragmentViewHolder holder) {
+    public final void onViewAttachedToWindow(@NonNull final FragmentListViewHolder holder) {
         placeFragmentInViewHolder(holder);
         gcFragments();
     }
 
     @Override
-    public void onViewDetachedFromWindow(@NonNull FragmentViewHolder holder) {
+    public void onViewDetachedFromWindow(@NonNull FragmentListViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
         mFragmentMaxLifecycleEnforcer.updateFragmentMaxLifecycle(false);
     }
@@ -290,7 +287,7 @@ public abstract class FragmentStateAdapter extends
      * @param holder that has been bound to a Fragment in the {@link #onBindViewHolder} stage.
      */
     @SuppressWarnings("WeakerAccess") // to avoid creation of a synthetic accessor
-    void placeFragmentInViewHolder(@NonNull final FragmentViewHolder holder) {
+    void placeFragmentInViewHolder(@NonNull final FragmentListViewHolder holder) {
         Fragment fragment = mFragments.get(holder.getItemId());
         if (fragment == null) {
             throw new IllegalStateException("Design assumption violated.");
@@ -419,7 +416,7 @@ public abstract class FragmentStateAdapter extends
     }
 
     @Override
-    public final void onViewRecycled(@NonNull FragmentViewHolder holder) {
+    public final void onViewRecycled(@NonNull FragmentListViewHolder holder) {
         final int viewHolderId = holder.getContainer().getId();
         final Long boundItemId = itemForViewHolder(viewHolderId); // item currently bound to the VH
         if (boundItemId != null) {
@@ -429,7 +426,7 @@ public abstract class FragmentStateAdapter extends
     }
 
     @Override
-    public final boolean onFailedToRecycleView(@NonNull FragmentViewHolder holder) {
+    public final boolean onFailedToRecycleView(@NonNull FragmentListViewHolder holder) {
         /*
          This happens when a ViewHolder is in a transient state (e.g. during an
          animation).
@@ -654,7 +651,7 @@ public abstract class FragmentStateAdapter extends
             mRecyclerView = recyclerView;
 
             // signal 1 of 3: current item has changed
-            mScrollListener = new FragmentStateScrollListener(aBoolean -> {
+            mScrollListener = new FragmentListScrollListener(aBoolean -> {
                 updateFragmentMaxLifecycle(false, aBoolean);
                 return null;
             });
