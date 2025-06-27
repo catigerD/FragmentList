@@ -69,7 +69,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * {@link Fragment}.
  * </ul>
  */
-public abstract class FragmentListAdapter extends
+public abstract class _FragmentListAdapter extends
         RecyclerView.Adapter<FragmentListViewHolder> implements StatefulAdapter {
     // State saving config
     private static final String KEY_PREFIX_FRAGMENT = "f#";
@@ -106,20 +106,20 @@ public abstract class FragmentListAdapter extends
      * @param fragmentActivity if the {@link ViewPager2} lives directly in a
      * {@link FragmentActivity} subclass.
      *
-     * @see FragmentListAdapter#FragmentListAdapter(Fragment)
-     * @see FragmentListAdapter#FragmentListAdapter(FragmentManager, Lifecycle)
+     * @see _FragmentListAdapter#_FragmentListAdapter(Fragment)
+     * @see _FragmentListAdapter#_FragmentListAdapter(FragmentManager, Lifecycle)
      */
-    public FragmentListAdapter(@NonNull FragmentActivity fragmentActivity) {
+    public _FragmentListAdapter(@NonNull FragmentActivity fragmentActivity) {
         this(fragmentActivity.getSupportFragmentManager(), fragmentActivity.getLifecycle());
     }
 
     /**
      * @param fragment if the {@link ViewPager2} lives directly in a {@link Fragment} subclass.
      *
-     * @see FragmentListAdapter#FragmentListAdapter(FragmentActivity)
-     * @see FragmentListAdapter#FragmentListAdapter(FragmentManager, Lifecycle)
+     * @see _FragmentListAdapter#_FragmentListAdapter(FragmentActivity)
+     * @see _FragmentListAdapter#_FragmentListAdapter(FragmentManager, Lifecycle)
      */
-    public FragmentListAdapter(@NonNull Fragment fragment) {
+    public _FragmentListAdapter(@NonNull Fragment fragment) {
         this(fragment.getChildFragmentManager(), fragment.getLifecycle());
     }
 
@@ -127,11 +127,11 @@ public abstract class FragmentListAdapter extends
      * @param fragmentManager of {@link ViewPager2}'s host
      * @param lifecycle of {@link ViewPager2}'s host
      *
-     * @see FragmentListAdapter#FragmentListAdapter(FragmentActivity)
-     * @see FragmentListAdapter#FragmentListAdapter(Fragment)
+     * @see _FragmentListAdapter#_FragmentListAdapter(FragmentActivity)
+     * @see _FragmentListAdapter#_FragmentListAdapter(Fragment)
      */
-    public FragmentListAdapter(@NonNull FragmentManager fragmentManager,
-                               @NonNull Lifecycle lifecycle) {
+    public _FragmentListAdapter(@NonNull FragmentManager fragmentManager,
+                                @NonNull Lifecycle lifecycle) {
         mFragmentManager = fragmentManager;
         mLifecycle = lifecycle;
         super.setHasStableIds(true);

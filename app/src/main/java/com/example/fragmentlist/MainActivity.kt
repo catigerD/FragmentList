@@ -9,8 +9,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.fragmentlist.adapter.FragmentListItemDragCallback
 import com.example.fragmentlist.adapter.FragmentListAdapter
 import com.example.fragmentlist.databinding.ActMainBinding
 import com.example.fragmentlist.databinding.FragMainBinding
@@ -18,6 +23,9 @@ import com.example.fragmentlist.databinding.FragMainBinding
 class MainActivity : FragmentActivity() {
 
     private lateinit var binding: ActMainBinding
+    private val adapter by lazy {
+        MainFragmentAdapter(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,9 +37,29 @@ class MainActivity : FragmentActivity() {
 
     private fun initRV() {
         fun execute(it: RecyclerView) {
-            it.layoutManager = LinearLayoutManager(this)
-            it.adapter = MainFragmentAdapter(this)
+//            it.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+//            it.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+            it.layoutManager = GridLayoutManager(this, 3, RecyclerView.VERTICAL, false)
+//            it.layoutManager = GridLayoutManager(this, 3, RecyclerView.HORIZONTAL, false)
+//            it.layoutManager = StaggeredGridLayoutManager(3, RecyclerView.VERTICAL)
+//            it.layoutManager = StaggeredGridLayoutManager(3, RecyclerView.HORIZONTAL)
+            it.adapter = adapter
             it.setItemViewCacheSize(10)
+            ItemTouchHelper(object : FragmentListItemDragCallback(adapter) {
+                override fun onSelectedChanged(viewHolder: ViewHolder?, actionState: Int) {
+                    super.onSelectedChanged(viewHolder, actionState)
+                    // 拖拽开始时改变Item外观
+                    if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                        viewHolder?.itemView?.alpha = 0.3f
+                    }
+                }
+
+                override fun clearView(recyclerView: RecyclerView, viewHolder: ViewHolder) {
+                    super.clearView(recyclerView, viewHolder)
+                    // 拖拽结束时恢复Item外观
+                    viewHolder.itemView.alpha = 1.0f
+                }
+            }).attachToRecyclerView(it)
         }
 
         execute(binding.flVh.recyclerView)
@@ -47,13 +75,16 @@ class MainFragmentAdapter(
         private const val TAG = "MainFragmentAdapter"
     }
 
-    override fun getItemCount(): Int {
-        return 10
-    }
+    override val itemConfigList: MutableList<ItemConfig> = (0..10).map {
+        ItemConfig(
+            uniqueId = it.toLong(),
+            creator = MainFragment::newInstance
+        )
+    }.toMutableList()
 
     override fun createFragment(position: Int): Fragment {
         Log.d(TAG, "createFragment: position : ${position}")
-        return MainFragment.newInstance(position)
+        return super.createFragment(position)
     }
 }
 
